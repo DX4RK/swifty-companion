@@ -4,10 +4,10 @@ class User {
   final String avatarUrl;
   final int level;
   final double levelPercentage;
-  final String wallet;
-  final String evalPoints;
-  final String rank;
-  final String score;
+  final int wallet;
+  final int evalPoints;
+  final int rank;
+  final double score;
   final List<Project> projects;
   final List<Skill> skills;
 
