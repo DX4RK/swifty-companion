@@ -1,7 +1,5 @@
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:swifty_companion/models/user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
