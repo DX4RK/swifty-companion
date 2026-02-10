@@ -1,4 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:swifty_companion/models/user.dart';
+
+User targetUser = User(
+  name: 'John Doe',
+  email: 'johndoe@mail.com',
+  avatarUrl: 'https://png.pngtree.com/png-clipart/20240717/original/pngtree-a-cute-penguin-png-image_15572371.png',
+  level: 8,
+  levelPercentage: 0.2,
+  wallet: 300,
+  evalPoints: 40,
+  rank: 20,
+  score: 2,
+  projects: [
+    Project(name: 'Project 1', score: 100, isSuccess: true),
+    Project(name: 'Project 2', score: 50, isSuccess: false),
+    Project(name: 'Project 3', score: 125, isSuccess: true),
+  ],
+  skills: [
+    Skill(name: 'Skill 1', score: 5),
+    Skill(name: 'Skill 2', score: 10),
+  ],
+);
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
