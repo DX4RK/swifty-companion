@@ -5,9 +5,20 @@ import 'dart:convert';
 
 import 'package:swifty_companion/pages/home_page.dart';
 import 'package:swifty_companion/pages/profile_page.dart';
+import 'package:swifty_companion/manager/key_manager.dart';
 
 void main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  TokenManager tokenManager = TokenManager();
+
+  try {
+    String token = await tokenManager.getValidToken();
+    print('Token read: $token');
+  } catch (e) {
+    print('Error getting token: $e');
+  }
+
   await dotenv.load(fileName: ".env.example");
   runApp(const MyApp());
 }
