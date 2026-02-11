@@ -1,10 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 class TokenManager {
   static const String _tokenKey = 'auth_token';
   static const String _expirationKey = 'token_expiration';
+
+  String get _clientId => dotenv.env['CLIENT_ID'] ?? '';
+  String get _clientSecret => dotenv.env['CLIENT_SECRET'] ?? '';
 
   Future<String> getValidToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -27,25 +31,28 @@ class TokenManager {
     final prefs = await SharedPreferences.getInstance();
 
     final response = await http.post(
-      Uri.parse('https://your-school-api.com/auth/token'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'api_key': 'YOUR_API_KEY',
-      }),
+      Uri.parse('https://api.intra.42.fr/oauth/token'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: {
+        'grant_type': 'client_credentials',
+        'client_id': _clientId,
+        'client_secret': _clientSecret,
+      },
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      String newToken = data['token'];
+      String newToken = data['access_token'];
+      int expiresIn = data['expires_in'];
 
-      DateTime expiration = DateTime.now().add(Duration(days: 7));
+      DateTime expiration = DateTime.now().add(Duration(seconds: expiresIn));
 
       await prefs.setString(_tokenKey, newToken);
       await prefs.setString(_expirationKey, expiration.toIso8601String());
 
       return newToken;
     } else {
-      throw Exception('Failed to generate token');
+      throw Exception('Failed to generate token: ${response.statusCode}');
     }
   }
 

@@ -10,8 +10,10 @@ import 'package:swifty_companion/manager/key_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  TokenManager tokenManager = TokenManager();
+  await dotenv.load(fileName: ".env");
 
+  TokenManager tokenManager = TokenManager();
+  print("hey");
   try {
     String token = await tokenManager.getValidToken();
     print('Token read: $token');
@@ -19,7 +21,6 @@ void main() async {
     print('Error getting token: $e');
   }
 
-  await dotenv.load(fileName: ".env.example");
   runApp(const MyApp());
 }
 
