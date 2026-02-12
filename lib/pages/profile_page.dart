@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swifty_companion/models/user.dart';
 
-User targetUser = User(
+User defaultUser = User(
   name: 'John Doe',
   email: 'johndoe@mail.com',
   avatarUrl: 'https://png.pngtree.com/png-clipart/20240717/original/pngtree-a-cute-penguin-png-image_15572371.png',
@@ -23,7 +23,12 @@ User targetUser = User(
 );
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final User targetUser;
+
+  const ProfilePage({
+    super.key,
+    required this.targetUser,
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -32,6 +37,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    User user = widget.targetUser;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 6, 149, 137),
       body: Stack(
@@ -81,13 +87,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'John Doe',
+                                Text(
+                                  user.name,
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text(
-                                  'mail@example.com',
+                                Text(
+                                  user.email,
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],
@@ -230,7 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: NetworkImage(
-                  '',
+                  user.avatarUrl,
                 ),
               ),
             ),

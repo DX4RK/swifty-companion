@@ -7,27 +7,6 @@ import 'package:swifty_companion/manager/key_manager.dart';
 
 import 'package:swifty_companion/pages/profile_page.dart';
 
-User targetUser = User(
-  name: 'John Doe',
-  email: 'johndoe@mail.com',
-  avatarUrl: 'https://png.pngtree.com/png-clipart/20240717/original/pngtree-a-cute-penguin-png-image_15572371.png',
-  level: 8,
-  levelPercentage: 0.2,
-  wallet: 300,
-  evalPoints: 40,
-  rank: 20,
-  score: 2,
-  projects: [
-    Project(name: 'Project 1', score: 100, isSuccess: true),
-    Project(name: 'Project 2', score: 50, isSuccess: false),
-    Project(name: 'Project 3', score: 125, isSuccess: true),
-  ],
-  skills: [
-    Skill(name: 'Skill 1', score: 5),
-    Skill(name: 'Skill 2', score: 10),
-  ],
-);
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -69,10 +48,38 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       final userData = jsonDecode(response.body);
       print(userData);
+
+      double level = (userData['cursus_users'][2]['level'] as num).toDouble();
+      double decimalPart = level - level.toInt();
+
+      User user = User(
+        name: userData['usual_full_name'],
+        email: userData['email'],
+        avatarUrl: userData['image']['link'],
+        level: userData['cursus_users'][2]['level'].toInt(),
+        levelPercentage: decimalPart,
+        wallet: userData['wallet'],
+        evalPoints: userData['correction_point'],
+        rank: 20,
+        score: 2,
+        projects: [
+          Project(name: 'Project 1', score: 100, isSuccess: true),
+          Project(name: 'Project 2', score: 50, isSuccess: false),
+          Project(name: 'Project 3', score: 125, isSuccess: true),
+        ],
+        skills: [
+          Skill(name: 'Skill 1', score: 5),
+          Skill(name: 'Skill 2', score: 10),
+        ],
+      );
+
+
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(),
+          builder: (context) => ProfilePage(
+            targetUser: user
+          ),
         )
       );
     } else {
