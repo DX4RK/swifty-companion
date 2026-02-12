@@ -1,5 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:swifty_companion/models/user.dart';
+import 'package:swifty_companion/manager/key_manager.dart';
+
+import 'package:swifty_companion/pages/profile_page.dart';
 
 User targetUser = User(
   name: 'John Doe',
@@ -30,6 +36,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 320), () {
+      if (_searchController.text.isNotEmpty) {
+        _performSearch(_searchController.text);
+      }
+    });
+  }
+
+  Future<void> _lookAtProfile(String username) async {
+    TokenManager tokenManager = TokenManager();
+    String token = await tokenManager.getValidToken();
+
+    final response = await http.get(
+      Uri.parse('https://api.intra.42.fr/v2/users/$username'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final userData = jsonDecode(response.body);
+      print(userData);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilePage(),
+        )
+      );
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
+
+  void _performSearch(String query) {
+    print('Searching for: $query');
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +142,11 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Expanded(
                               child: TextField(
+                                controller: _searchController,
+                                onSubmitted: (value) {
+                                  _lookAtProfile(value);
+                                },
+                                textInputAction: TextInputAction.search,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: const InputDecoration(
                                   hintText: "Login",
