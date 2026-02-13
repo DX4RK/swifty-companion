@@ -1,26 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:swifty_companion/models/user.dart';
+import 'package:swifty_companion/pages/home_page.dart';
 
-User defaultUser = User(
-  name: 'John Doe',
-  email: 'johndoe@mail.com',
-  avatarUrl: 'https://png.pngtree.com/png-clipart/20240717/original/pngtree-a-cute-penguin-png-image_15572371.png',
-  level: 8,
-  levelPercentage: 0.2,
-  wallet: 300,
-  evalPoints: 40,
-  rank: 20,
-  score: 2,
-  projects: [
-    Project(name: 'Project 1', score: 100, isSuccess: true),
-    Project(name: 'Project 2', score: 50, isSuccess: false),
-    Project(name: 'Project 3', score: 125, isSuccess: true),
-  ],
-  skills: [
-    Skill(name: 'Skill 1', score: 5),
-    Skill(name: 'Skill 2', score: 10),
-  ],
-);
+import 'package:swifty_companion/pages/home_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final User targetUser;
@@ -58,7 +40,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         child: IconButton(
                           icon: const Icon(Icons.arrow_back_ios_new, size: 18),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              )
+                          ),
                         ),
                       ),
                     ],
@@ -109,13 +96,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('Level 5', style: TextStyle(fontWeight: FontWeight.bold)),
-                                      Text('42%'),
+                                      Text(
+                                          'Level ${user.level}',
+                                          style: TextStyle(fontWeight: FontWeight.bold)
+                                      ),
+                                      Text('${(user.levelPercentage * 100).round()}%'),
                                     ],
                                   ),
                                   SizedBox(height: 4),
                                   LinearProgressIndicator(
-                                    value: 0.42,
+                                    value: user.levelPercentage,
                                     backgroundColor: Colors.grey[300],
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                                     minHeight: 10,
@@ -136,10 +126,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisSpacing: 7,
                               childAspectRatio: 1.3,
                               children: [
-                                _buildCard('💰', '₳372', 'Wallet', Colors.green.shade50),
-                                _buildCard('📝', '40', 'Ev. Point', Colors.blue.shade50),
-                                _buildCard('📜', '26', 'Rank', Colors.yellow.shade50),
-                                _buildCard('🎯', '2.2k', 'Score', Colors.red.shade50),
+                                _buildCard('💰', '₳${user.wallet}', 'Wallet', Colors.green.shade50),
+                                _buildCard('📝', user.evalPoints.toString(), 'Ev. Point', Colors.blue.shade50),
+                                _buildCard('📜', user.grade, 'Grade', Colors.yellow.shade50),
+                                _buildCard('🎯', user.available, 'Location', Colors.red.shade50),
                               ],
                             ),
                           ),
@@ -160,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 10),
 
                                 Container(
-                                  height: 320,
+                                    height: 320,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
@@ -196,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 10),
 
                                 Container(
-                                  height: 320,
+                                    height: 320,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
@@ -312,7 +302,7 @@ Widget _projectCard(String name, num score, bool isSuccess) {
         Text(
           name,
           style: TextStyle(
-              fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.bold,
           ),
         ),
         Row(

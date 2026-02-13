@@ -6,8 +6,8 @@ class User {
   final double levelPercentage;
   final int wallet;
   final int evalPoints;
-  final int rank;
-  final double score;
+  final String grade;
+  final String available;
   final List<Project> projects;
   final List<Skill> skills;
 
@@ -19,8 +19,8 @@ class User {
     required this.levelPercentage,
     required this.wallet,
     required this.evalPoints,
-    required this.rank,
-    required this.score,
+    required this.grade,
+    required this.available,
     required this.projects,
     required this.skills,
   });

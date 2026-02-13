@@ -47,21 +47,24 @@ class _HomePageState extends State<HomePage> {
 
     if (response.statusCode == 200) {
       final userData = jsonDecode(response.body);
-      print(userData);
 
-      double level = (userData['cursus_users'][2]['level'] as num).toDouble();
+      double level = (userData['cursus_users'][1]['level'] as num).toDouble();
       double decimalPart = level - level.toInt();
+
+      int coalRank = 0;
+      int coalScore = 0;
+
 
       User user = User(
         name: userData['usual_full_name'],
         email: userData['email'],
         avatarUrl: userData['image']['link'],
-        level: userData['cursus_users'][2]['level'].toInt(),
+        level: userData['cursus_users'][1]['level'].toInt(),
         levelPercentage: decimalPart,
         wallet: userData['wallet'],
         evalPoints: userData['correction_point'],
-        rank: 20,
-        score: 2,
+        grade: userData['cursus_users'][1]['grade'],
+        available: userData['location'] ?? 'Unavailable',
         projects: [
           Project(name: 'Project 1', score: 100, isSuccess: true),
           Project(name: 'Project 2', score: 50, isSuccess: false),
@@ -75,12 +78,12 @@ class _HomePageState extends State<HomePage> {
 
 
       Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            targetUser: user
-          ),
-        )
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfilePage(
+                targetUser: user
+            ),
+          )
       );
     } else {
       print('Error: ${response.statusCode}');
@@ -139,11 +142,11 @@ class _HomePageState extends State<HomePage> {
                         margin: const EdgeInsets.only(left: 0),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                              color: Colors.grey.shade600
-                          )
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                                color: Colors.grey.shade600
+                            )
                         ),
                         child: Row(
                           children: [
@@ -221,8 +224,8 @@ Widget _profileCard(String name, num score, bool isSuccess) {
           height: 45,
           width: 45,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Color.from(alpha: 0.5, red: 0, green: 0, blue: 0))
+              shape: BoxShape.circle,
+              border: Border.all(color: Color.from(alpha: 0.5, red: 0, green: 0, blue: 0))
           ),
           child: CircleAvatar(
             backgroundImage: NetworkImage('https://img.freepik.com/photos-gratuite/pingouin-amusant-illustration-3d_183364-123493.jpg'),
@@ -233,7 +236,7 @@ Widget _profileCard(String name, num score, bool isSuccess) {
         Text(
           'login',
           style: TextStyle(
-            fontSize: 15
+              fontSize: 15
           ),
         )
       ],
