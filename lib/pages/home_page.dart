@@ -149,104 +149,70 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Column(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Title
-                          Text(
-                            'Search',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
 
-                          // Date
-                          Text(
-                            '23 Jan, 2021',
-                            style: TextStyle(color: Colors.grey[400]),
-                          )
-                        ],
-                      ),
+              // Title
+              Text(
+                'Search',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
 
-                      SizedBox(height: 20),
+              Text(
+                '23 Jan, 2021',
+                style: TextStyle(color: Colors.grey),
+              ),
 
-                      Container(
-                        height: 46,
-                        margin: const EdgeInsets.only(left: 0),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                                color: Colors.grey.shade600
-                            )
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _searchController,
-                                onSubmitted: (value) {
-                                  _lookAtProfile(value);
-                                },
-                                textInputAction: TextInputAction.search,
-                                style: const TextStyle(fontSize: 14),
-                                decoration: const InputDecoration(
-                                  hintText: "Login",
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+              SizedBox(height: 20),
 
-                      SizedBox(height: 15),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Recent Searches',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-
-                            SizedBox(height: 5),
-
-                            Container(
-                                height: 640,
-                                child: ListView(
-                                  children: [
-                                    _profileCard('Project 1', 100, true),
-                                  ],
-                                )
-                            ),
-                            SizedBox(height: 30),
-                          ],
-                        ),
-                      ),
-
-                    ],
+              // Search bar
+              Container(
+                height: 46,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.grey.shade600),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  onSubmitted: (value) => _lookAtProfile(value),
+                  decoration: const InputDecoration(
+                    hintText: "Login",
+                    border: InputBorder.none,
                   ),
+                ),
+              ),
+
+              SizedBox(height: 15),
+
+              const Text(
+                'Recent Searches',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              SizedBox(height: 5),
+
+              // 🔥 IMPORTANT : la liste prend le reste de l'écran
+              Expanded(
+                child: ListView(
+                  children: [
+                    _profileCard('Project 1', 100, true),
+                  ],
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
