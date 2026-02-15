@@ -29,18 +29,20 @@ class User {
 class Project {
   final String name;
   final int score;
-  final bool isSuccess;
+  final bool isFinished;
+  final bool isValidated;
 
   Project({
     required this.name,
     required this.score,
-    required this.isSuccess,
+    required this.isFinished,
+    required this.isValidated,
   });
 }
 
 class Skill {
   final String name;
-  final int score;
+  final double score;
 
   Skill({
     required this.name,
