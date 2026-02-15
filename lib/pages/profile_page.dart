@@ -155,16 +155,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    child: ListView(
+                                    child: ListView.builder(
                                       padding: const EdgeInsets.all(15),
-                                      children: [
-                                        _projectCard('Project 1', 100, true),
-                                        _projectCard('Project 2', 50, false),
-                                        _projectCard('Project 3', 125, true),
-                                        _projectCard('Project 4', 80, true),
-                                        _projectCard('Project 5', 45, false),
+                                      itemCount: user.projects.length,
+                                      itemBuilder: (context, index) {
+                                        final project = user.projects[index];
 
-                                      ],
+                                        return _projectCard(
+                                            project.name,
+                                            project.score,
+                                            project.isFinished,
+                                            project.isValidated,
+                                        );
+                                      },
                                     )
                                 ),
                                 SizedBox(height: 30),
@@ -191,15 +194,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    child: ListView(
+                                    child: ListView.builder(
                                       padding: const EdgeInsets.all(15),
-                                      children: [
-                                        _skillsCard('Skill 1', 5),
-                                        _skillsCard('Skill 2', 10),
-                                        _skillsCard('Skill 3', 5),
-                                        _skillsCard('Skill 4', 7),
-                                        _skillsCard('Skill 5', 15),
-                                      ],
+                                      itemCount: user.skills.length,
+                                      itemBuilder: (context, index) {
+                                        final skill = user.skills[index];
+
+                                        return _skillsCard(
+                                          skill.name,
+                                          skill.score,
+                                        );
+                                      },
                                     )
                                 ),
                                 SizedBox(height: 30),
@@ -260,7 +265,7 @@ Widget _skillsCard(String name, num score) {
               children: [
                 SizedBox(width: 5),
                 Text(
-                  "${score.toString()} (${((score / 20) * 100).toInt()}%)",
+                  "${score.toStringAsFixed(2)} (${((score / 20) * 100).toInt()}%)",
                   style: TextStyle(
                       fontWeight: FontWeight.w500
                   ),
@@ -284,16 +289,14 @@ Widget _skillsCard(String name, num score) {
   );
 }
 
-Widget _projectCard(String name, num score, bool isSuccess) {
+Widget _projectCard(String name, num score, bool isFinished, bool isValidated) {
   return Container(
     margin: EdgeInsets.only(bottom: 10),
     padding: EdgeInsets.all(15),
     decoration: BoxDecoration(
-      color: isSuccess && score > 100
-          ? Colors.amber.shade100
-          : isSuccess
-          ? Colors.green.shade50
-          : Colors.red.shade50,
+      color: isValidated
+          ? (score > 100 ? Colors.amber.shade100 : Colors.green.shade50)
+          : (!isFinished ? Colors.orange : Colors.red.shade50),
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
@@ -308,7 +311,9 @@ Widget _projectCard(String name, num score, bool isSuccess) {
         Row(
           children: [
             Icon(
-              isSuccess ? Icons.check : Icons.close,
+              isValidated
+                  ? (score > 100 ? Icons.star_border_outlined : Icons.check)
+                  : (!isFinished ? Icons.construction_sharp : Icons.close),
               color: Colors.black,
             ),
             SizedBox(width: 5),

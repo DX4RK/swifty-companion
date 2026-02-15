@@ -53,29 +53,50 @@ class _HomePageState extends State<HomePage> {
 
       int coalRank = 0;
       int coalScore = 0;
+      int currentCursus = 1;
+      int currentCursusId = userData['cursus_users'][currentCursus]['cursus_id'];
 
+      List<Project> filteredProjects = [];
+
+      for (var item in userData['projects_users']) {
+        List cursusIds = item["cursus_ids"] ?? [];
+
+        if (cursusIds.contains(currentCursusId)) {
+          Project project = Project(
+            name: item["project"]["name"] ?? "Unknown",
+            score: item["final_mark"] ?? 0,
+            isFinished: item['status'] == "finished",
+            isValidated: item["validated?"] ?? false,
+          );
+
+          filteredProjects.add(project);
+        }
+      }
+
+      List<Skill> filteredSkills = [];
+
+      for (var item in userData['cursus_users'][currentCursus]['skills']) {
+        Skill skill = Skill(
+          name: item["name"] ?? "Unknown",
+          score: item["level"] ?? 0,
+        );
+
+        filteredSkills.add(skill);
+      }
 
       User user = User(
         name: userData['usual_full_name'],
         email: userData['email'],
         avatarUrl: userData['image']['link'],
-        level: userData['cursus_users'][1]['level'].toInt(),
+        level: userData['cursus_users'][currentCursus]['level'].toInt(),
         levelPercentage: decimalPart,
         wallet: userData['wallet'],
         evalPoints: userData['correction_point'],
-        grade: userData['cursus_users'][1]['grade'],
+        grade: userData['cursus_users'][currentCursus]['grade'],
         available: userData['location'] ?? 'Unavailable',
-        projects: [
-          Project(name: 'Project 1', score: 100, isSuccess: true),
-          Project(name: 'Project 2', score: 50, isSuccess: false),
-          Project(name: 'Project 3', score: 125, isSuccess: true),
-        ],
-        skills: [
-          Skill(name: 'Skill 1', score: 5),
-          Skill(name: 'Skill 2', score: 10),
-        ],
+        projects: filteredProjects,
+        skills: filteredSkills,
       );
-
 
       Navigator.push(
           context,
