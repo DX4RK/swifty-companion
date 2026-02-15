@@ -66,9 +66,7 @@ class _HomePageState extends State<HomePage> {
 
       double level = (userData['cursus_users'][1]['level'] as num).toDouble();
       double decimalPart = level - level.toInt();
-
-      int coalRank = 0;
-      int coalScore = 0;
+      
       int currentCursus = 1;
       int currentCursusId = userData['cursus_users'][currentCursus]['cursus_id'];
 
