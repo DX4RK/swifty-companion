@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:swifty_companion/models/user.dart';
@@ -12,6 +13,14 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+}
+
+Future<bool> hasNetwork() async {
+  var connectivityResult = await Connectivity().checkConnectivity();
+  if (connectivityResult == ConnectivityResult.none) {
+    return false;
+  }
+  return true;
 }
 
 class _HomePageState extends State<HomePage> {
@@ -35,6 +44,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _lookAtProfile(String username) async {
+    if (!await hasNetwork()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No internet connection')),
+      );
+      return;
+    }
+
     TokenManager tokenManager = TokenManager();
     String token = await tokenManager.getValidToken();
 
