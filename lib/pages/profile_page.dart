@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:swifty_companion/models/user.dart';
 import 'package:swifty_companion/pages/home_page.dart';
 
-import 'package:swifty_companion/pages/home_page.dart';
-
 class ProfilePage extends StatefulWidget {
   final User targetUser;
 
@@ -20,6 +18,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     User user = widget.targetUser;
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final avatarTop = MediaQuery.of(context).padding.top + screenHeight * 0.1;
+    final avatarRadius = screenWidth * 0.13;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 6, 149, 137),
       body: Stack(
@@ -57,28 +62,29 @@ class _ProfilePageState extends State<ProfilePage> {
 
               Expanded(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
                   child: SingleChildScrollView(
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(40),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 70),
+                          SizedBox(height: screenHeight * 0.09),
                           Padding(
-                            padding: const EdgeInsets.only(left: 30),
+                            padding: EdgeInsets.only(left: screenWidth * 0.08),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   user.name,
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: screenHeight * 0.022, fontWeight: FontWeight.bold),
                                 ),
-                                const SizedBox(height: 4),
                                 Text(
                                   user.email,
                                   style: TextStyle(color: Colors.grey),
@@ -87,10 +93,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
 
-                          SizedBox(height: 25),
+                          SizedBox(height: screenHeight * 0.03),
 
                           Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
                               child: Column(
                                 children: [
                                   Row(
@@ -103,7 +109,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Text('${(user.levelPercentage * 100).round()}%'),
                                     ],
                                   ),
-                                  SizedBox(height: 4),
                                   LinearProgressIndicator(
                                     value: user.levelPercentage,
                                     backgroundColor: Colors.grey[300],
@@ -116,9 +121,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.07),
                             child: GridView.count(
-                              padding: const EdgeInsets.only(top: 10),
+                              padding: EdgeInsets.only(top: screenWidth * 0.04),
                               crossAxisCount: 2,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -126,37 +131,37 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisSpacing: 7,
                               childAspectRatio: 1.3,
                               children: [
-                                _buildCard('💰', '₳${user.wallet}', 'Wallet', Colors.green.shade50),
-                                _buildCard('📝', user.evalPoints.toString(), 'Ev. Point', Colors.blue.shade50),
-                                _buildCard('📜', user.grade, 'Grade', Colors.yellow.shade50),
-                                _buildCard('🎯', user.available, 'Location', Colors.red.shade50),
+                                _buildCard('💰', '₳${user.wallet}', 'Wallet', Colors.green.shade50, screenHeight, screenWidth),
+                                _buildCard('📝', user.evalPoints.toString(), 'Ev. Point', Colors.blue.shade50, screenHeight, screenWidth),
+                                _buildCard('📜', user.grade, 'Grade', Colors.yellow.shade50, screenHeight, screenWidth),
+                                _buildCard('🎯', user.available, 'Location', Colors.red.shade50, screenHeight, screenWidth),
                               ],
                             ),
                           ),
 
-                          SizedBox(height: 25),
+                          SizedBox(height: screenHeight * 0.035),
 
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.07),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Projects',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: screenHeight * 0.024, fontWeight: FontWeight.bold),
                                 ),
 
-                                SizedBox(height: 10),
+                                SizedBox(height: screenHeight * 0.01),
 
                                 Container(
-                                    height: 320,
+                                    height: screenHeight * 0.4,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: ListView.builder(
-                                      padding: const EdgeInsets.all(15),
+                                      padding: EdgeInsets.all(screenWidth * 0.04),
                                       itemCount: user.projects.length,
                                       itemBuilder: (context, index) {
                                         final project = user.projects[index];
@@ -166,36 +171,38 @@ class _ProfilePageState extends State<ProfilePage> {
                                             project.score,
                                             project.isFinished,
                                             project.isValidated,
+                                            screenHeight,
+                                            screenWidth,
                                         );
                                       },
                                     )
                                 ),
-                                SizedBox(height: 30),
+                                SizedBox(height: screenHeight * 0.04),
                               ],
                             ),
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.07),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Skills',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: screenHeight * 0.024, fontWeight: FontWeight.bold),
                                 ),
 
-                                SizedBox(height: 10),
+                                SizedBox(height: screenHeight * 0.01),
 
                                 Container(
-                                    height: 320,
+                                    height: screenHeight * 0.4,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: ListView.builder(
-                                      padding: const EdgeInsets.all(15),
+                                      padding: EdgeInsets.all(screenWidth * 0.04),
                                       itemCount: user.skills.length,
                                       itemBuilder: (context, index) {
                                         final skill = user.skills[index];
@@ -203,6 +210,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         return _skillsCard(
                                           skill.name,
                                           skill.score,
+                                          screenHeight,
+                                          screenWidth,
                                         );
                                       },
                                     )
@@ -221,31 +230,56 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
 
-          // Avatar floating - FIXE
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 44 + 80 - 45,
-            left: 30,
-            child: CircleAvatar(
-              radius: 52,
-              backgroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(
-                  user.avatarUrl,
+          Stack(
+            children: [
+              Positioned(
+                top: avatarTop + avatarRadius * 0.97,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: screenHeight * 0.095,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.grey[200]!,
+                        Colors.grey[200]!,
+                        Colors.grey[200]!,
+                        Colors.grey[200]!.withOpacity(0.0),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+              Positioned(
+                top: avatarTop,
+                left: screenWidth * 0.08,
+                child: CircleAvatar(
+                  radius: avatarRadius,
+                  backgroundColor: Colors.white,
+                  child: CircleAvatar(
+                    radius: screenWidth * 0.125,
+                    backgroundImage: NetworkImage(user.avatarUrl),
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
   }
 }
 
-Widget _skillsCard(String name, num score) {
+Widget _skillsCard(String name, num score, final screenHeight, final screenWidth) {
   return Container(
-    margin: EdgeInsets.only(bottom: 5),
-    padding: EdgeInsets.all(10),
+    margin: EdgeInsets.only(bottom: screenWidth * 0.025),
+    padding: EdgeInsets.all(screenWidth * 0.04),
     decoration: BoxDecoration(
       color: Colors.blue.shade50,
       borderRadius: BorderRadius.circular(10),
@@ -255,27 +289,31 @@ Widget _skillsCard(String name, num score) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              name,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold
+            Expanded(
+              child: Text(
+                name,
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Row(
               children: [
-                SizedBox(width: 5),
+                SizedBox(width: screenWidth * 0.01),
                 Text(
                   "${score.toStringAsFixed(2)} (${((score / 20) * 100).toInt()}%)",
                   style: TextStyle(
-                      fontWeight: FontWeight.w500
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
 
-        SizedBox(height: 5),
+        SizedBox(height: screenHeight * 0.01),
 
         LinearProgressIndicator(
           value: 0.42,
@@ -289,10 +327,10 @@ Widget _skillsCard(String name, num score) {
   );
 }
 
-Widget _projectCard(String name, num score, bool isFinished, bool isValidated) {
+Widget _projectCard(String name, num score, bool isFinished, bool isValidated, final screenHeight, final screenWidth) {
   return Container(
-    margin: EdgeInsets.only(bottom: 10),
-    padding: EdgeInsets.all(15),
+    margin: EdgeInsets.only(bottom: screenWidth * 0.025),
+    padding: EdgeInsets.all(screenWidth * 0.03),
     decoration: BoxDecoration(
       color: isValidated
           ? (score > 100 ? Colors.amber.shade100 : Colors.green.shade50)
@@ -316,7 +354,7 @@ Widget _projectCard(String name, num score, bool isFinished, bool isValidated) {
                   : (!isFinished ? Icons.construction_sharp : Icons.close),
               color: Colors.black,
             ),
-            SizedBox(width: 5),
+            SizedBox(width: screenWidth * 0.01),
             Text(
               score.toString(),
               style: TextStyle(
@@ -329,10 +367,9 @@ Widget _projectCard(String name, num score, bool isFinished, bool isValidated) {
     ),
   );
 }
-
-Widget _buildCard(String emoji, String value, String label, Color bgColor) {
+Widget _buildCard(String emoji, String value, String label, Color bgColor, final screenHeight, final screenWidth) {
   return Container(
-    padding: const EdgeInsets.all(15),
+    padding: EdgeInsets.all(screenWidth * 0.04),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(15),
@@ -342,27 +379,27 @@ Widget _buildCard(String emoji, String value, String label, Color bgColor) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(screenWidth * 0.0168),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(emoji, style: const TextStyle(fontSize: 20)),
+          child: Text(emoji, style: TextStyle(fontSize: screenHeight * 0.03)),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontSize: screenHeight * 0.023,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: screenHeight * 0.013,
                 color: Colors.grey[600],
               ),
             ),
