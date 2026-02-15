@@ -107,6 +107,15 @@ class _HomePageState extends State<HomePage> {
           )
       );
     } else {
+      if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login does not exist.'),
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
+
       print('Error: ${response.statusCode}');
     }
   }
