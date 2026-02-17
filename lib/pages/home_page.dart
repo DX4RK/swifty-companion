@@ -64,12 +64,41 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       final userData = jsonDecode(response.body);
 
-      double level = (userData['cursus_users'][1]['level'] as num).toDouble();
-      double decimalPart = level - level.toInt();
-      
-      int currentCursus = 1;
-      int currentCursusId = userData['cursus_users'][currentCursus]['cursus_id'];
+      int currentCursus = 0;
+      int currentCursusId = 0;
+      double level = 0.0;
+      DateTime latestMarked = DateTime.parse("1970-01-01T00:00:00Z");
 
+      for (var project in userData['projects_users']) {
+        if (project['marked_at'] != null) {
+          DateTime markedAt = DateTime.parse(project['marked_at']);
+
+          if (markedAt.isAfter(latestMarked)) {
+            latestMarked = markedAt;
+
+            currentCursusId = project['cursus_ids'][0];
+
+            currentCursus = userData['cursus_users']
+                .indexWhere((c) => c['cursus_id'] == currentCursusId);
+
+            if (currentCursus != -1) {
+              var cursus = userData['cursus_users'][currentCursus];
+              level = (cursus['level'] as num).toDouble();
+            }
+          }
+        }
+      }
+
+      // for (var cursus in userData['cursus_users']) {
+      //   if (cursus['end_at'] == null) {
+      //     currentCursusId = cursus['cursus_id'];
+      //     level = (cursus['level'] as num).toDouble();
+      //     break;
+      //   }
+      //   currentCursus += 1;
+      // }
+
+      double decimalPart = level - level.toInt();
       List<Project> filteredProjects = [];
 
       for (var item in userData['projects_users']) {
@@ -99,14 +128,14 @@ class _HomePageState extends State<HomePage> {
       }
 
       User user = User(
-        name: userData['usual_full_name'],
-        email: userData['email'],
-        avatarUrl: userData['image']['link'],
-        level: userData['cursus_users'][currentCursus]['level'].toInt(),
+        name: userData['usual_full_name'] ?? 'Unknown',
+        email: userData['email'] ?? 'unknown',
+        avatarUrl: userData['image']['link'] ?? '',
+        level: userData['cursus_users'][currentCursus]['level'].toInt() ?? 0,
         levelPercentage: decimalPart,
-        wallet: userData['wallet'],
-        evalPoints: userData['correction_point'],
-        grade: userData['cursus_users'][currentCursus]['grade'],
+        wallet: userData['wallet'] ?? 0,
+        evalPoints: userData['correction_point'] ?? 0,
+        grade: userData['cursus_users'][currentCursus]['grade'] ?? 'Unknown',
         available: userData['location'] ?? 'Unavailable',
         projects: filteredProjects,
         skills: filteredSkills,
@@ -134,8 +163,34 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _performSearch(String query) {
+  void _performSearch(String query) async {
     print('Searching for: $query');
+    try {
+      if (!await hasNetwork()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No internet connection')),
+        );
+        return;
+      }
+
+      TokenManager tokenManager = TokenManager();
+      String token = await tokenManager.getValidToken();
+
+      final response = await http.get(
+      Uri.parse('https://api.intra.42.fr/v2/users?search[login]=${query}%&page[size]=10'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final userData = jsonDecode(response.body);
+        print(userData);
+      }
+
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
