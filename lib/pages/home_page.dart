@@ -163,8 +163,19 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  List<dynamic> _users = [];
+  bool _isLoading = false;
+
   void _performSearch(String query) async {
     print('Searching for: $query');
+
+    if (query.isEmpty) {
+      setState(() {
+        _users.clear();
+      });
+      return;
+    }
+
     try {
       if (!await hasNetwork()) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -173,23 +184,50 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
+      setState(() {
+        _isLoading = true;
+      });
+
       TokenManager tokenManager = TokenManager();
       String token = await tokenManager.getValidToken();
 
+      final prefix = query;
+      final max = '${prefix}zzzz';
+
+      final uri = Uri.https(
+        'api.intra.42.fr',
+        '/v2/users',
+        {
+          'range[login]': '$prefix,$max',
+          'per_page': '8',
+        },
+      );
+
       final response = await http.get(
-      Uri.parse('https://api.intra.42.fr/v2/users?search[login]=${query}%&page[size]=10'),
+        uri,
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
         },
       );
 
       if (response.statusCode == 200) {
         final userData = jsonDecode(response.body);
-        print(userData);
+        //print(userData[0]['login']);
+        setState(() {
+          _users = userData;
+        });
+      } else {
+        setState(() {
+          _users.clear();
+        });
       }
-
     } catch (e) {
       print(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -248,7 +286,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 15),
 
               const Text(
-                'Recent Searches',
+                'Suggested Profiles',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -257,14 +295,22 @@ class _HomePageState extends State<HomePage> {
 
               SizedBox(height: 5),
 
-              // 🔥 IMPORTANT : la liste prend le reste de l'écran
               Expanded(
-                child: ListView(
-                  children: [
-                    _profileCard('Project 1', 100, true),
-                  ],
+                child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: _users.length,
+                    itemBuilder: (context, index) {
+                      final user = _users[index];
+                      print(user);
+                      return _profileCard(
+                        user['login'] ?? 'Unknown',
+                        user['image']['link'] ?? ''
+                        );
+                    },
                 ),
               ),
+
             ],
           ),
         ),
@@ -273,7 +319,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _profileCard(String name, num score, bool isSuccess) {
+Widget _profileCard(String name, String imageLink) {
   return Container(
     margin: EdgeInsets.only(bottom: 10),
     padding: EdgeInsets.all(10),
@@ -293,13 +339,13 @@ Widget _profileCard(String name, num score, bool isSuccess) {
               border: Border.all(color: Color.from(alpha: 0.5, red: 0, green: 0, blue: 0))
           ),
           child: CircleAvatar(
-            backgroundImage: NetworkImage('https://img.freepik.com/photos-gratuite/pingouin-amusant-illustration-3d_183364-123493.jpg'),
+            backgroundImage: NetworkImage(imageLink),
             radius: 50,
           ),
         ),
         SizedBox(width: 10),
         Text(
-          'login',
+          name,
           style: TextStyle(
               fontSize: 15
           ),
