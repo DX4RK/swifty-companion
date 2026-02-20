@@ -302,11 +302,11 @@ class _HomePageState extends State<HomePage> {
                     itemCount: _users.length,
                     itemBuilder: (context, index) {
                       final user = _users[index];
-                      print(user);
                       return _profileCard(
                         user['login'] ?? 'Unknown',
-                        user['image']['link'] ?? ''
-                        );
+                        user['image']['link'] ?? '',
+                        _lookAtProfile
+                      );
                     },
                 ),
               ),
@@ -319,38 +319,41 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _profileCard(String name, String imageLink) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 10),
-    padding: EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: Colors.grey[100],
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Color.from(alpha: 0.5, red: 0, green: 0, blue: 0))
+Widget _profileCard(String name, String imageLink, Future<void> Function(String) callback) {
+  return InkWell(
+    onTap: () => callback(name),
+    child: Container(
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Color.from(alpha: 0.5, red: 0, green: 0, blue: 0))
+            ),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(imageLink),
+              radius: 50,
+            ),
           ),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(imageLink),
-            radius: 50,
-          ),
-        ),
-        SizedBox(width: 10),
-        Text(
-          name,
-          style: TextStyle(
-              fontSize: 15
-          ),
-        )
-      ],
+          SizedBox(width: 10),
+          Text(
+            name,
+            style: TextStyle(
+                fontSize: 15
+            ),
+          )
+        ],
+      ),
     ),
   );
 }

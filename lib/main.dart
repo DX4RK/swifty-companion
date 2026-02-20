@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:swifty_companion/pages/home_page.dart';
 import 'package:swifty_companion/pages/profile_page.dart';
+import 'package:swifty_companion/pages/loading_page.dart';
 import 'package:swifty_companion/manager/key_manager.dart';
 
 void main() async {
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: LoadingPage(),
       //profile: ProfilePage(),
     );
   }
