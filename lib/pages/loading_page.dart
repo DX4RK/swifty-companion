@@ -17,9 +17,18 @@ class _LoadingPageState extends State<LoadingPage> {
           children: [
             Center(
               child: Column(
+				mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  Text("hello")
+                  CircularProgressIndicator(
+					valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+				  ),
+				  SizedBox(height: 10),
+                  Text(
+					"Loading Content...",
+					style: TextStyle(
+                  		fontWeight: FontWeight.bold,
+                		),
+					)
                 ],
               ),
             ),

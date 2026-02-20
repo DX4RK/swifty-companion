@@ -7,6 +7,7 @@ import 'package:swifty_companion/models/user.dart';
 import 'package:swifty_companion/manager/key_manager.dart';
 
 import 'package:swifty_companion/pages/profile_page.dart';
+import 'package:swifty_companion/pages/loading_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -53,6 +54,13 @@ class _HomePageState extends State<HomePage> {
 
     TokenManager tokenManager = TokenManager();
     String token = await tokenManager.getValidToken();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoadingPage(),
+      )
+    );
 
     final response = await http.get(
       Uri.parse('https://api.intra.42.fr/v2/users/$username'),
@@ -158,7 +166,12 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        )
+      );
       print('Error: ${response.statusCode}');
     }
   }
