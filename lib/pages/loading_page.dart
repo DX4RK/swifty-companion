@@ -15,8 +15,14 @@ class _LoadingPageState extends State<LoadingPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Center(child: CircularProgressIndicator()),
-            Text("hello")
+            Center(
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  Text("hello")
+                ],
+              ),
+            ),
           ],
         ),
       ),
