@@ -160,22 +160,25 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.all(screenWidth * 0.04),
-                                      itemCount: user.projects.length,
-                                      itemBuilder: (context, index) {
-                                        final project = user.projects[index];
-
-                                        return _projectCard(
-                                            project.name,
-                                            project.score,
-                                            project.isFinished,
-                                            project.isValidated,
-                                            screenHeight,
-                                            screenWidth,
-                                        );
-                                      },
-                                    )
+                                    child: user.projects.isEmpty
+                                        ? Center(
+                                            child: Text("No projects yet."),
+                                          )
+                                        : ListView.builder(
+                                              padding: EdgeInsets.all(screenWidth * 0.04),
+                                              itemCount: user.projects.length,
+                                              itemBuilder: (context, index) {
+                                                final project = user.projects[index];
+                                                return _projectCard(
+                                                  project.name,
+                                                  project.score,
+                                                  project.isFinished,
+                                                  project.isValidated,
+                                                  screenHeight,
+                                                  screenWidth,
+                                                );
+                                                },
+                                        )
                                 ),
                                 SizedBox(height: screenHeight * 0.04),
                               ],
@@ -201,20 +204,25 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.all(screenWidth * 0.04),
-                                      itemCount: user.skills.length,
-                                      itemBuilder: (context, index) {
-                                        final skill = user.skills[index];
+                                    child: user.skills.isEmpty
+                                        ? Center(
+                                            child: Text("No skills available."),
+                                        )
+                                        :
+                                        ListView.builder(
+                                          padding: EdgeInsets.all(screenWidth * 0.04),
+                                          itemCount: user.skills.length,
+                                          itemBuilder: (context, index) {
+                                            final skill = user.skills[index];
 
-                                        return _skillsCard(
-                                          skill.name,
-                                          skill.score,
-                                          screenHeight,
-                                          screenWidth,
-                                        );
-                                      },
-                                    )
+                                            return _skillsCard(
+                                              skill.name,
+                                              skill.score,
+                                              screenHeight,
+                                              screenWidth,
+                                            );
+                                          },
+                                        )
                                 ),
                                 SizedBox(height: 30),
                               ],
@@ -233,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Stack(
             children: [
               Positioned(
-                top: avatarTop + avatarRadius * 0.97,
+                top: avatarTop * 1.3,
                 left: 0,
                 right: 0,
                 child: Container(

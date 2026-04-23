@@ -84,14 +84,16 @@ class _HomePageState extends State<HomePage> {
           if (markedAt.isAfter(latestMarked)) {
             latestMarked = markedAt;
 
-            currentCursusId = project['cursus_ids'][0];
+            if (project['cursus_ids'] != null && project['cursus_ids'].length > 0) {
+              currentCursusId = project['cursus_ids'][0];
 
-            currentCursus = userData['cursus_users']
-                .indexWhere((c) => c['cursus_id'] == currentCursusId);
+              currentCursus = userData['cursus_users']
+                  .indexWhere((c) => c['cursus_id'] == currentCursusId);
 
-            if (currentCursus != -1) {
-              var cursus = userData['cursus_users'][currentCursus];
-              level = (cursus['level'] as num).toDouble();
+              if (currentCursus != -1) {
+                var cursus = userData['cursus_users'][currentCursus];
+                level = (cursus['level'] as num).toDouble();
+              }
             }
           }
         }
@@ -126,24 +128,34 @@ class _HomePageState extends State<HomePage> {
 
       List<Skill> filteredSkills = [];
 
-      for (var item in userData['cursus_users'][currentCursus]['skills']) {
-        Skill skill = Skill(
-          name: item["name"] ?? "Unknown",
-          score: item["level"] ?? 0,
-        );
+      if (currentCursus != -1 && userData['cursus_users'].isNotEmpty) {
+        var skills = userData['cursus_users'][currentCursus]['skills'];
 
-        filteredSkills.add(skill);
+        if (skills != null) {
+          for (var item in skills) {
+            Skill skill = Skill(
+              name: item["name"] ?? "Unknown",
+              score: item["level"] ?? 0,
+            );
+
+            filteredSkills.add(skill);
+          }
+        }
       }
+
+      var cursusData = currentCursus != -1 && currentCursus < userData['cursus_users'].length
+          ? userData['cursus_users'][currentCursus]
+          : null;
 
       User user = User(
         name: userData['usual_full_name'] ?? 'Unknown',
         email: userData['email'] ?? 'unknown',
-        avatarUrl: userData['image']['link'] ?? '',
-        level: userData['cursus_users'][currentCursus]['level'].toInt() ?? 0,
+        avatarUrl: userData['image']?['link'] ?? '',
+        level: cursusData != null ? (cursusData['level'] as num).toInt() : 0,
         levelPercentage: decimalPart,
         wallet: userData['wallet'] ?? 0,
         evalPoints: userData['correction_point'] ?? 0,
-        grade: userData['cursus_users'][currentCursus]['grade'] ?? 'Unknown',
+        grade: cursusData?['grade'] ?? 'Unknown',
         available: userData['location'] ?? 'Unavailable',
         projects: filteredProjects,
         skills: filteredSkills,
