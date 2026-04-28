@@ -75,12 +75,48 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: screenHeight * 0.09),
+                          //SizedBox(height: screenHeight * 0.09),
+                          SizedBox(height: screenHeight * 0.03),
+
+                          /*Container(
+                            height: screenHeight * 0.1,
+                            decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                               begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                               colors: [
+                                 Colors.grey[200]!,
+                                  Colors.grey[200]!,
+                                  Colors.grey[200]!,
+                                  Colors.grey[200]!.withOpacity(0.0),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40),
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              radius: avatarRadius,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: screenWidth * 0.125,
+                                backgroundImage: NetworkImage(user.avatarUrl),
+                            )),
+                          ),*/
+
                           Padding(
                             padding: EdgeInsets.only(left: screenWidth * 0.08),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                CircleAvatar(
+                              radius: avatarRadius,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: screenWidth * 0.125,
+                                backgroundImage: NetworkImage(user.avatarUrl),
+                            )),
                                 Text(
                                   user.name,
                                   style: TextStyle(fontSize: screenHeight * 0.022, fontWeight: FontWeight.bold),
@@ -238,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
 
-          Stack(
+          /*Stack(
             children: [
               Positioned(
                 top: avatarTop * 1.3,
@@ -277,7 +313,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ],
-          )
+          )*/
         ],
       ),
     );
