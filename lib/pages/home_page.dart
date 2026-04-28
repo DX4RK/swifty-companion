@@ -99,15 +99,6 @@ class _HomePageState extends State<HomePage> {
         }
       }
 
-      // for (var cursus in userData['cursus_users']) {
-      //   if (cursus['end_at'] == null) {
-      //     currentCursusId = cursus['cursus_id'];
-      //     level = (cursus['level'] as num).toDouble();
-      //     break;
-      //   }
-      //   currentCursus += 1;
-      // }
-
       double decimalPart = level - level.toInt();
       List<Project> filteredProjects = [];
 
@@ -206,6 +197,7 @@ class _HomePageState extends State<HomePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('No internet connection')),
         );
+        setState(() => _isLoading = false);
         return;
       }
 
@@ -238,7 +230,6 @@ class _HomePageState extends State<HomePage> {
 
       if (response.statusCode == 200) {
         final userData = jsonDecode(response.body);
-        //print(userData[0]['login']);
         setState(() {
           _users = userData;
         });
@@ -335,7 +326,6 @@ class _HomePageState extends State<HomePage> {
                     },
                 ),
               ),
-
             ],
           ),
         ),
