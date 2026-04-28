@@ -22,7 +22,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final avatarTop = MediaQuery.of(context).padding.top + screenHeight * 0.1;
     final avatarRadius = screenWidth * 0.13;
 
     return Scaffold(
@@ -75,36 +74,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //SizedBox(height: screenHeight * 0.09),
                           SizedBox(height: screenHeight * 0.03),
 
-                          /*Container(
-                            height: screenHeight * 0.1,
-                            decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                               begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                               colors: [
-                                 Colors.grey[200]!,
-                                  Colors.grey[200]!,
-                                  Colors.grey[200]!,
-                                  Colors.grey[200]!.withOpacity(0.0),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40),
-                              ),
-                            ),
-                            child: CircleAvatar(
-                              radius: avatarRadius,
-                              backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                radius: screenWidth * 0.125,
-                                backgroundImage: NetworkImage(user.avatarUrl),
-                            )),
-                          ),*/
-
+                          // Avatar/Name/Email
                           Padding(
                             padding: EdgeInsets.only(left: screenWidth * 0.08),
                             child: Column(
@@ -131,6 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                           SizedBox(height: screenHeight * 0.03),
 
+                          // Level Bar
                           Padding(
                               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
                               child: Column(
@@ -156,6 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                           ),
 
+                          // User Stats/Data
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.07),
                             child: GridView.count(
@@ -177,6 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                           SizedBox(height: screenHeight * 0.035),
 
+                          // Projects
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.07),
                             child: Column(
@@ -221,6 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
 
+                          // Skills
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.07),
                             child: Column(
@@ -273,47 +249,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-
-          /*Stack(
-            children: [
-              Positioned(
-                top: avatarTop * 1.3,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: screenHeight * 0.095,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.grey[200]!,
-                        Colors.grey[200]!,
-                        Colors.grey[200]!,
-                        Colors.grey[200]!.withOpacity(0.0),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: avatarTop,
-                left: screenWidth * 0.08,
-                child: CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundColor: Colors.white,
-                  child: CircleAvatar(
-                    radius: screenWidth * 0.125,
-                    backgroundImage: NetworkImage(user.avatarUrl),
-                  ),
-                ),
-              ),
-            ],
-          )*/
         ],
       ),
     );
